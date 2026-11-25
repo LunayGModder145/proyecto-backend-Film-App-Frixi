@@ -1,208 +1,297 @@
-### Proyecto backend: Movie App
-
-### Requisitos del proyecto
-
-Se pide desarrollar una aplicación web de búsqueda y gestión de películas que contemple las siguientes funcionalidades y endpoints asociados. Trabajaremos sobre los conceptos vistos de Frontend y Backend en clase
-
-**Aclaración inicial previa**: La app tendrá dos roles distintos: `Usuario y Administrador`. Las funcionalidades que aparecerán tanto en el panel de control como en el resto de endpoints variarán dependiendo del tipo de usuario, no pudiendo nunca acceder a aquellas zonas o contenidos que no le corresponden.
-
-### Endpoints
-
-Endpoints Web:
-- [GET] `/` Vista de inicio de la app
-- [GET] `/dashboard` Panel de control
-- [GET] `/search/:title` Vista detalle de la película
-- [GET] `/search` Buscador de películas
-- [GET] `/favorites` Películas favoritas del usuario
-- [GET] `/profile` Vista detalle del usuario
-- [GET] `/users` : Mostrará la lista de usuarios. Se podrá hacer el CRUD de un usuario desde esta vista (admin)
-
-Endpoints API:
-- [GET] `/api/user` Obtener datos del perfil del usuario o administrador
-- [POST] `/api/signup` Registrar usuario en la aplicación
-- [PUT] `/api/user` Editar datos del perfil del usuario o administrador
-- [DELETE] `/api/user` Borrar un usuario de la base de datos (admin)
-- [POST] `/api/login` Hacer login en la aplicación
-- [POST] `/api/logout` Salir
-- [GET] `/api/movie/:title` Buscar película o películas
-- [POST] `/api/movie` Crear película (admin)
-- [PUT] `/api/movie` Editar película (admin)
-- [DELETE] `/api/movie` Borrar película (admin)
-- [GET] `/api/favorites` Obtener películas favoritas del usuario
-- [POST] `/api/favorites` Guardar favorito del usuario
-- [DELETE] `/api/favorites` Borrar favorito del usuario
-
-
-![img](../../assets/back/intermedio/starwarsnode.jpeg)
-
-### Formulario de acceso
-
-Endpoints para formulario:
-
-- [GET] `/` Vista de inicio de la app. Tendrá como mínimo un formulario de email y contraseña como credenciales de entrada a la app. Además, deberá ofrecer la alternativa de identificación mediante Google, Facebook u otro proveedor de autenticación.
-- [GET] `/signup` Vista de formulario de registro de la app. Tendrá como mínimo un formulario de email y contraseña como credenciales de entrada a la app. Además, deberá ofrecer la alternativa de identificación mediante Google, Facebook u otro proveedor de autenticación.
-- [POST] `/api/signup` Creación de nuevo usuario en base de datos (SQL), abrir sesión y redirección a /dashboard.
-- [POST] `/api/login` Validación de credenciales, abrir sesión y redirección a /dashboard si es Usuario, o /movies si es Administrador.
-- [POST] `/api/logout` Cierre de sesión y redirección a /.
-
-### Menú
-
-No asociado a ningún endpoint concreto, sino que estará presente una vez dentro de la app, pasada la identificación, en todas las vistas excepto el Panel de control.
-
-Dicho menú se podrá representar como se desee, si bien se recomienda un efecto de persiana asociada a un icono de hamburguesa.
-
-Endpoints para menú Usuario:
-
-- [GET] `/dashboard` Panel de control
-- [GET] `/search` Buscador de películas
-- [GET] `/movies` Mis películas
-- [POST] `/api/logout` Salir
-
-Endpoints para menú Administrador:
-
-- [POST] `/api/logout` Salir
-
-### Panel de control (Usuario): /dashboard
-
-Se mostrarán dos botones con iconos para acceder a las secciones `/search` y `/movies`.
-
-(Como se mencionó antes, idealmente en esta vista no debería haber menú sino sencillamente un icono para Salir.)
-
-### Buscar película (Usuario): /search
-
-Aparecerá un buscador (una caja de texto y un botón o icono de enviar) que buscará una película por título y mostrará a continuación las posibles coincidencias.
-
-Para cada película se mostrará la siguiente info:
-
-- Título completo
-- Imagen representativa
-- Año
-- Director
-- Género
-- Duración
-
-Para cada película habrá un botón de `Añadir a Favoritos`, que asociará dicha película al Usuario en la BBDD.
-
-### Vista detalle de la película (Usuario): /search/:title
-
-Aparecerá la vista detalle de la película buscada, representando la información de dicha peli:
-
-- Título completo
-- Imagen representativa
-- Año
-- Director
-- Género
-- Duración
-- Sinopsis
-- Actores
-- Rating
-
-Habrá un botón de `Añadir a Favoritos`, que asociará dicha película al Usuario.
-
-### Mis películas favoritas (Usuario): /movies
-
-Aparecerá un listado de las películas que el Usuario añadió a la BBDD a través del buscador, con la misma información adicional de cada una de ellas (título completo, imagen representativa, año, director, género y duración), así como un botón de `Quitar de Mis películas`, que eliminará la asociación de película del Usuario.
-
-### Gestionar películas (Administrador): /movies
-
-Esta es la única vista que tendrá el Administrador en la aplicación, de manera que no podrá acceder a ninguna de las otras. De la misma manera, el Usuario no podrá acceder a esta vista tampoco.
-
-Se mostrará un botón de `Crear nueva` y debajo del mismo, un listado de todas las películas almacenadas en la BBDD, con botones de `Editar` y `Eliminar` para cada una de ellas.
-
-El botón de `Crear nueva` mostrará un formulario con los campos título completo, imagen representativa, año, director, género y duración, para dar de alta una nueva película en la base de datos. Se valorará positivamente la realización de algún tipo de validación de dichos campos. Al enviar el formuliario se invocará al endpoint `POST /api/movie`.
-
-Para el botón de `Editar`, cuando el Administrador pinche sobre él, la aplicación invocará al endpoint `PUT /api/movie` (donde :id tendrá el valor correspondiente), que mostrará un formulario idéntico al del párrafo anterior, pero con los campos autorrellenados con los datos almacenados en la BBDD. Si se realizó la validación en la creación, debería también aplicarse en este caso al modificarlos el Administrador.
-
-Para el botón de `Eliminar`, se solicitará algún tipo de confirmación y en caso afirmativo, se borrará de la base de datos. Se lanzará una petición al endpoint `DELETE /api/movie` Asimismo, se desasociarán todas las posibles relaciones entre dicha película eliminada y aquellos Usuarios que la tuvieran guardada en sus películas.
-
-### Vista perfil
-
-- [GET] `/profile` : Mostrará datos del usuario o administrador logueado. Estos datos podrán ser editados desde aquí.
-
-### Vista de usuarios (Administrador)
-
-- [GET] `/users` : Mostrará la lista de usuarios registrados en la aplicación. Cada usuario podrá ser editado o borrado por el administrador. Además podrá dar de alta nuevos usuarios.
-
-### Vista registro
-
-- [GET] `/signup` : Registro de usuario nuevo. Tendrá como mínimo un formulario con los campos: nombre, email y contraseña (los dos últimos serán usados como credenciales de acceso a la app). Además, deberá ofrecer la alternativa de identificación mediante Google, Facebook u otro proveedor de autenticación a elección.
-
-Los usuarios se guardarán en la BBDD SQL.
-
-### Vista ingresar
-
-- [GET] `/login`: Pantalla con formulario para validación de credenciales, abrir sesión y redirección a **home**.
-
-## Notas adicionales
-
-### Sobre el control de acceso
-
-La aplicación debe estar protegida a entradas indebidas de usuarios no registrados (o autorizados por un proveedor externo), de manera que cualquier endpoint asociado a la zona privada (es decir, distinto de /, /login y /logout) comprobará si la sesión está abierta, y en otro caso redireccionará al inicio de la app.
-
-Para el login con credenciales email y contraseña, deberá hacerse mediante `JWT` (el cifrado es opcional). Para la parte de login con uno o más proveedores de terceros(Google, Github, etc...) deberá hacerse mediante `OAuth` (con o sin Firebase, a elegir; en cualquier caso, con un proveedor OAuth será suficiente).
-
-### Sobre el modelo de datos
-
-Para el almacenamiento y la búsqueda de los datos, se realizará de la siguiente manera:
-
-- La información relativa a usuarios de la plataforma (credenciales y otras cuestiones de acceso, así como la asociación de películas a usuarios) se almacenará en una `base de datos relacional SQL`.
-
-- Los datos de las películas provendrán de dos fuentes distintas:
-  - Datos de películas de APIs (elegir una API). Puede ser otra que no esté en la lista
-    - [API OMDB](http://www.omdbapi.com/)
-    - [themoviedb](https://developer.themoviedb.org/docs/getting-started)
-  - Base de datos no relacional `MongoDB`, que será exclusivamente mantenida por el Administrador.
-
-- El objetivo será en todo momento que no se replique información, dando prioridad a `OMDB` si ya dispone de los datos de una película, y si no es así, complementarla con una base de datos.
-
-- Al realizar un Usuario la búsqueda de películas por título, la aplicación deberá consultar en primer lugar a la API `OMDB`:
-
-  1.  Si la película es localizada en dicha API, mostrará sus datos al Usuario por pantalla en los resultados de búsqueda, sin almacenarlos en ninguna base de datos.
-  2.  Si la película no es localizada en dicha API, entonces buscará en la BBDD `MongoDB`.
-  3.  Si no existe, devolverá un mensaje de `No hay resultados` o similar.
-
-- Cuando un Usuario añada a sus películas una de las mostradas en el buscador, se guardará en la base de datos relacional (`SQL`) la información necesaria para asociar dicho usuario con la fuente de datos correspondiente (`OMDB` o en la `BBDD MongoDB`).
-  Remarcar que no deben guardarse de nuevo los datos de la película, puesto que estos ya existen en otro lugar, sino la relación entre la fuente de la que provienen sus datos (`OMDB` o `MongoDB`) y el usuario.
-
-- La base de datos `MongoDB` tan solo guardará las películas que no están en `OMDB` (con los mismos datos: título completo, imagen representativa, año, director, género y duración) para alimentar el buscador del Usuario.
-  Para dicho Usuario, el origen de los datos debería ser totalmente transparente, de manera que no debería saber si estos provienen de API externa o de la BBDD. En cualquier caso, el objetivo es evitar cualquier tipo de redundancia.
-
-
-### Sobre la app
-
-La aplicación debe ser `mobile-first` y de tipo `Server Side Rendering` utilizando un motor de plantillas (`Pug` o `EJS`).
-
-## Control de versiones
-
-Gestión del control de versiones con GiHub desde el principio del proyecto. Lo utilizaremos para trabajar en equipo de manera paralela, utilizando ramas, pull request, etc. Trabajar en un proyecto como colaboradores de equipo.
-
-### Sobre los recursos de terceros
-
-Se permite (y recomienda, si con ello se minimiza el tiempo de desarrollo y se acelera así el de entrega) el uso de cualquier recurso de terceros (librerías, paquetes npm, etc.) además del código propio.
-
-### Sobre la metodología
-
-Durante el desarrollo del proyecto completo, se seguirá una metodología ágil tipo `SCRUM`, aplicando además `TDD` desde el comienzo hasta el final.
-
-Esto implicará el establecimiento de un backlog de tareas, un sprint con sus story points y reparto de tareas, así como la creación de tests unitarios desde el principio y, a ser posible, la realización de tests e2e al final.
-
-### Documentación
-Se deberá generar documentación de la app de cada parte. además de comentar el código las partes importantes, se deberá hacer uso de `JSOC` y `Swagger` para agregar documentación a nuestro servidor.
-
-### Wireframes en baja fidelidad
-
-Podrán utilizarse estos wireframes como referencia para el diseño visual de la app. 
-
-![img](../../assets/back/intermedio/Wireframes.png)
-
-# A por ello!!
-
-![img](../../assets/back/intermedio/iknownodejs.jpg)
-
-
-
-
-
-
-
-
+# 🎬 Film App
+
+Aplicación web de búsqueda y gestión de películas, con renderizado en servidor (SSR) y diseño *mobile-first*. Proyecto en equipo del curso de **The Bridge**.
+
+Los usuarios buscan películas, ven su ficha y guardan sus favoritas. El administrador gestiona el catálogo propio de películas (las que no están en OMDB) y los usuarios de la plataforma.
+
+> El enunciado original del proyecto está en [`docs/ENUNCIADO.md`](docs/ENUNCIADO.md).
+
+---
+
+## 👥 Equipo
+
+- Borja Jiménez
+- Mariela Velasquez
+- Leonardo Delgado
+- Daniel Lopez
+
+---
+
+## 🧰 Tecnologías
+
+| Parte | Tecnología |
+|---|---|
+| Servidor | Node.js + Express 5 |
+| Vistas (SSR) | Pug + CSS propio (mobile-first) |
+| BBDD relacional | PostgreSQL en Supabase (`pg`) — usuarios y favoritos |
+| BBDD no relacional | MongoDB (`mongoose`) — películas creadas por el admin |
+| API externa | [OMDB API](http://www.omdbapi.com/) |
+| Autenticación | JWT en cookie `httpOnly` + contraseñas con `bcrypt` + OAuth con Google |
+| Documentación | Swagger (`swagger-jsdoc` + `swagger-ui-express`) y JSDoc |
+| Tests | Jest + Supertest |
+
+---
+
+## ✨ Funcionalidades
+
+### Usuario
+- Registro con email y contraseña, o inicio de sesión con Google.
+- **Dashboard** con acceso al buscador y a sus películas.
+- **Buscador** de películas por título, con tarjetas y botón *Añadir a favoritos*.
+- **Vista detalle** de la película (sinopsis, actores, valoración…).
+- **Mis películas**: lista de favoritas con botón *Quitar*.
+- **Perfil**: ver y editar sus datos.
+
+### Administrador
+- **Gestionar películas** (MongoDB): listado, crear, editar con formulario ya relleno y borrar con confirmación. Al borrar una película se borran también los favoritos asociados.
+- **Gestionar usuarios**: CRUD completo desde la vista `/users`.
+- **Perfil**: ver y editar sus datos.
+
+### Control de acceso
+- Cualquier vista privada sin sesión redirige a `/`; la API privada responde `401`.
+- Cada rol solo entra en sus vistas: si un usuario abre una vista de admin (o al revés), vuelve a su página de inicio (usuario → `/dashboard`, admin → `/movies`).
+- Menú hamburguesa con efecto persiana, distinto según el rol.
+
+---
+
+## 🔎 Cómo funciona la búsqueda
+
+Para el usuario es transparente de dónde vienen los datos de la película:
+
+1. Se busca primero en **OMDB**. Si aparece, se muestra **sin guardarla** en ninguna base de datos.
+2. Si no está en OMDB, se busca en **MongoDB** (catálogo del admin).
+3. Si no está en ninguno, se muestra *"No hay resultados"*.
+
+Al añadir una favorita **no se copian los datos de la película**: en SQL solo se guarda qué usuario la guardó, su id (`imdbID` o `_id`) y de qué fuente viene (`omdb` o `mongo`). Al listar los favoritos, los datos se piden a su fuente original.
+
+---
+
+## 🗂️ Modelo de datos
+
+```mermaid
+erDiagram
+    USERS ||--o{ FAVORITES : "guarda"
+    FAVORITES }o..|| OMDB_MOVIE : "source = omdb (imdbID)"
+    FAVORITES }o..|| MONGO_MOVIE : "source = mongo (_id)"
+
+    USERS {
+        int id PK
+        varchar name "NOT NULL"
+        varchar email UK "único sin distinguir mayúsculas"
+        varchar password_hash "NULL si entra con Google"
+        varchar google_id UK "NULL si entra con email"
+        enum role "user | admin, por defecto user"
+        timestamptz created_at
+    }
+
+    FAVORITES {
+        int id PK
+        int user_id FK "ON DELETE CASCADE"
+        varchar movie_id "imdbID o _id"
+        enum source "omdb | mongo"
+        timestamptz created_at
+    }
+
+    MONGO_MOVIE {
+        ObjectId _id PK
+        string title
+        string poster
+        number year "1888 a año actual + 5"
+        string director
+        string genre
+        number runtime "mínimo 1 minuto"
+        string synopsis
+        string_array actors
+        number rating "0 a 10"
+        date createdAt
+        date updatedAt
+    }
+
+    OMDB_MOVIE {
+        string imdbID PK
+        string Title
+        string Year
+        string Poster
+        string Director
+        string Genre
+        string Runtime
+    }
+```
+
+| Relación | Cardinalidad | Detalle |
+|---|---|---|
+| Usuario → Favoritos | 1 : 0..N | Un usuario nuevo no tiene favoritos; `user_id` es `NOT NULL` |
+| Favorito → Película | 0..N : 1 | Cada favorito apunta a una sola película, en OMDB o en MongoDB según `source` |
+| Usuario ↔ Película | N : M | Resuelta con la tabla intermedia `favorites` |
+
+**Decisiones de diseño**
+
+- **Sin redundancia:** `favorites` guarda la relación (`movie_id` + `source`), nunca los datos de la película.
+- **Relación polimórfica:** `movie_id` no tiene `FOREIGN KEY` porque la película vive fuera de PostgreSQL (OMDB o MongoDB); su existencia la comprueba el código.
+- **Sin duplicados:** `UNIQUE (user_id, movie_id, source)`.
+- **Dos formas de login:** `password_hash` y `google_id` pueden ser `NULL`, pero el `CHECK` obliga a tener al menos uno.
+- **Email único real:** índice único sobre `LOWER(email)`.
+- **Borrado en cascada:** al borrar un usuario se borran sus favoritos.
+
+El esquema completo está en [`docs/schema.sql`](docs/schema.sql).
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+├── app.js              # Punto de entrada: middlewares, rutas y arranque
+├── config/             # Conexiones (SQL, MongoDB), sesión JWT, OAuth y Swagger
+├── controllers/        # Reciben la petición y devuelven la respuesta
+├── services/           # Lógica de negocio (búsqueda, OMDB, favoritos, sesión)
+├── models/             # Acceso a datos: users y favorites (SQL), movie (Mongoose)
+├── middlewares/        # isAuthenticated y checkRole
+├── routes/             # Rutas de vistas y de la API (con anotaciones Swagger)
+├── views/              # Plantillas Pug
+├── public/             # CSS y JS del navegador
+├── test/               # Tests con Jest + Supertest
+└── docs/               # Enunciado, esquema SQL, tareas y guía de Trello
+```
+
+---
+
+## 🚀 Instalación y puesta en marcha
+
+### Requisitos
+
+- Node.js 18 o superior
+- Un proyecto de **Supabase** (PostgreSQL)
+- Una base de datos **MongoDB** (por ejemplo, MongoDB Atlas)
+- Una **API key de OMDB** ([pedirla aquí](http://www.omdbapi.com/apikey.aspx))
+- Credenciales OAuth de **Google** (solo para el login con Google)
+
+### 1. Clonar e instalar
+
+```bash
+git clone https://github.com/maridev-ve/proyecto-backend-Film-App.git
+cd proyecto-backend-Film-App
+npm install
+```
+
+### 2. Variables de entorno
+
+Copia `.env.example` a `.env` y rellénalo:
+
+| Variable | Obligatoria | Descripción |
+|---|---|---|
+| `JWT_SECRET` | Sí | Secreto para firmar los JWT |
+| `DATABASE_URL` | Sí | Cadena de conexión de PostgreSQL (Supabase) |
+| `MONGO_URI` | Sí | Cadena de conexión de MongoDB |
+| `OMDB_API_KEY` | Sí | API key de OMDB |
+| `GOOGLE_CLIENT_ID` | Para Google | Client ID de OAuth |
+| `GOOGLE_CLIENT_SECRET` | Para Google | Client secret de OAuth |
+| `GOOGLE_CALLBACK_URL` | Para Google | Por ejemplo `http://localhost:3000/api/auth/google/callback` |
+| `PORT` | No | Puerto del servidor (por defecto `3000`) |
+| `JWT_EXPIRES_IN` | No | Duración del token (por defecto `1d`) |
+
+> ⚠️ Nunca subas el archivo `.env` al repositorio.
+
+### 3. Crear las tablas SQL
+
+Abre el **SQL Editor** de Supabase, pega el contenido de [`docs/schema.sql`](docs/schema.sql) y ejecútalo. Crea los tipos, las tablas `users` y `favorites` y activa Row Level Security.
+
+Al final del archivo hay un bloque opcional (comentado) con dos usuarios de prueba:
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| Usuario | `lucia@filmapp.test` | `123456` |
+| Admin | `admin@filmapp.test` | `123456` |
+
+### 4. Arrancar
+
+```bash
+npm run dev     # desarrollo, con nodemon
+npm start       # producción
+```
+
+La app queda en <http://localhost:3000>. El servidor solo arranca si consigue conectar con MongoDB.
+
+### 5. Tests
+
+```bash
+npm test             # lanza todos los tests (unitarios + e2e)
+npm run test:e2e     # solo los e2e
+npm run test:watch   # modo watch
+```
+
+Hay dos tipos de tests en [`test/`](test/):
+
+- **Unitarios** (`test/*.test.js`): cada pieza por separado (controladores, middlewares, servicios, modelos), con la base de datos simulada.
+- **E2E** (`test/e2e/`): recorren los flujos principales con la app entera y peticiones HTTP reales, como el navegador (con la cookie de sesión):
+  - `usuario.e2e.test.js`: registro → buscar → detalle → favoritos → quitar → logout, login y perfil.
+  - `admin.e2e.test.js`: crear, editar y borrar películas (y sus favoritos), y gestión de usuarios.
+  - `acceso.e2e.test.js`: control de acceso sin sesión, por rol y con tokens no válidos.
+
+Los e2e **no tocan Supabase ni el Mongo real** y no necesitan `.env`:
+- PostgreSQL se sustituye por [pg-mem](https://github.com/oguimbal/pg-mem), que carga el esquema real de `docs/schema.sql`.
+- MongoDB se sustituye por [mongodb-memory-server](https://github.com/typegoose/mongodb-memory-server).
+- OMDB se simula con un catálogo fijo.
+
+La primera vez que se lanzan, mongodb-memory-server descarga el binario de `mongod` (unos 100 MB) y tarda un poco más.
+
+---
+
+## 🧭 Endpoints
+
+### Vistas (Pug)
+
+| Ruta | Acceso | Descripción |
+|---|---|---|
+| `GET /` | Público | Inicio |
+| `GET /login` | Público | Formulario de login |
+| `GET /signup` | Público | Formulario de registro |
+| `GET /dashboard` | Usuario | Panel de control |
+| `GET /search` | Usuario | Buscador de películas |
+| `GET /search/:title` | Usuario | Detalle de una película |
+| `GET /favorites` | Usuario | Películas favoritas |
+| `GET /movies` | Usuario / Admin | *Mis películas* (usuario) o *Gestionar películas* (admin) |
+| `GET /movies/:id/edit` | Admin | Editar película |
+| `GET /users` | Admin | Lista y CRUD de usuarios |
+| `GET /users/:id/edit` | Admin | Editar usuario |
+| `GET /profile` | Usuario / Admin | Perfil |
+
+### API
+
+| Método y ruta | Acceso | Descripción |
+|---|---|---|
+| `POST /api/signup` | Público | Registro |
+| `POST /api/login` | Público | Login (crea la cookie con el JWT) |
+| `POST /api/logout` | Público | Logout (borra la cookie) |
+| `GET /api/auth/google` | Público | Inicia el login con Google |
+| `GET /api/auth/google/callback` | Público | Vuelta de Google |
+| `GET /api/user` | Usuario / Admin | Datos del perfil propio |
+| `PUT /api/user` | Usuario / Admin | Editar el perfil propio |
+| `POST /api/user` | Admin | Crear usuario |
+| `PUT /api/user/:id` | Admin | Editar un usuario |
+| `DELETE /api/user/:id` | Admin | Borrar un usuario |
+| `GET /api/movie/:title` | Usuario / Admin | Buscar películas (OMDB → MongoDB) |
+| `POST /api/movie` | Admin | Crear película en MongoDB |
+| `PUT /api/movie/:id` | Admin | Editar película |
+| `DELETE /api/movie/:id` | Admin | Borrar película (y sus favoritos) |
+| `GET /api/favorites` | Usuario | Listar favoritos |
+| `POST /api/favorites` | Usuario | Añadir favorito |
+| `DELETE /api/favorites` | Usuario | Quitar favorito |
+
+La documentación interactiva de la API (Swagger) está en <http://localhost:3000/api-docs>.
+
+---
+
+## 🔐 Autenticación
+
+- **Email y contraseña:** la contraseña se guarda cifrada con `bcrypt`. Al hacer login o registrarse se firma un **JWT** que se guarda en la cookie `token` (`httpOnly`, 1 día).
+- **Google (OAuth):** si el email ya existe se enlaza la cuenta; si no, se crea un usuario nuevo con rol `user`.
+- **Middlewares:** `isAuthenticated` comprueba el token (cookie o cabecera `Authorization`) y `checkRole` comprueba el rol. Siempre van en ese orden.
+- **Logout:** como el JWT no se guarda en el servidor, cerrar sesión consiste en borrar la cookie.
+
+---
+
+## 🛠️ Metodología
+
+- **SCRUM:** backlog y reparto de tareas en Trello ([`docs/TAREAS.md`](docs/TAREAS.md), [`docs/GUIA_TRELLO.md`](docs/GUIA_TRELLO.md)).
+- **TDD:** tests unitarios con Jest desde el principio.
+- **Git flow:** ramas `feature/*` que se integran en `develop` mediante Pull Request; `main` está protegida y solo recibe merges por PR.

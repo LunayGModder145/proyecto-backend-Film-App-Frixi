@@ -1,0 +1,38 @@
+extends layout
+include mixins
+
+block content
+  include menu
+  main.container
+    h1 Usuarios
+
+    //- public/js/adminUsers.js lo envía con fetch a POST /api/user (no abre sesión,
+    //- a diferencia de /api/signup) y, si va bien, recarga /users.
+    form.form.panel.js-user-form(method="POST" action="/api/user" data-method="POST" data-redirect="/users")
+      h2 Nuevo usuario
+      //- Errores de validación que devuelve el backend (400)
+      .alert.js-form-errors(role="alert" hidden)
+      +userFields(null, true)
+      button.btn.btn--primary(type="submit") Crear usuario
+
+    if error
+      p.alert= error
+    else if users && users.length
+      ul.user-list.js-user-list
+        each u in users
+          li.user-list__item
+            .user-list__info
+              strong= u.name
+              span.muted= u.email
+              span.tag= u.role === 'admin' ? 'Administrador' : 'Usuario'
+            .user-list__actions
+              a.btn.btn--ghost(href=`/users/${u.id}/edit`) Editar
+              //- El admin no puede borrarse a sí mismo (el backend también lo impide)
+              if user && u.id === user.id
+                span.muted (tú)
+              else
+                //- DELETE no se puede enviar con un form HTML: lo hace public/js/adminUsers.js con fetch
+                button.btn.btn--danger.js-delete-user(type="button" data-id=u.id data-name=u.name) Borrar
+            p.card__msg(role="status")
+    else
+      p.empty No hay usuarios registrados.

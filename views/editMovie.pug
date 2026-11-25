@@ -1,0 +1,21 @@
+extends layout
+include mixins
+
+block content
+  include menu
+  main.container
+    a.back(href="/movies") ← Volver a Gestionar películas
+
+    if error
+      p.alert= error
+    else if movie
+      //- Mismo formulario que "Crear nueva", pero relleno con los datos de la BBDD.
+      //- public/js/adminMovies.js lo envía con fetch a PUT /api/movie/:id y, si va bien, vuelve a /movies.
+      form.form.panel.js-movie-form(method="POST" action=`/api/movie/${movie.id}` data-method="PUT" data-redirect="/movies")
+        h1 Editar película
+        //- Errores de validación que devuelve el backend (400)
+        .alert.js-form-errors(role="alert" hidden)
+        +movieFields(movie)
+        button.btn.btn--primary(type="submit") Guardar cambios
+    else
+      p.empty La película no existe o ya se ha eliminado.

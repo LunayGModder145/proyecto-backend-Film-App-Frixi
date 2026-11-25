@@ -1,0 +1,79 @@
+//- Mixins reutilizables. Se usan con "include mixins" en cada vista.
+
+//- Tarjeta de película: lo que se ve en buscador, favoritos y gestión.
+//- El "block" permite que cada vista meta sus propios botones dentro.
+mixin movieCard(movie)
+  article.card
+    img.card__img(src=movie.poster || 'https://placehold.co/300x450?text=Sin+imagen' alt=movie.title)
+    .card__body
+      h3.card__title= movie.title
+      ul.card__info
+        li
+          strong Año: 
+          | #{movie.year}
+        li
+          strong Director: 
+          | #{movie.director}
+        li
+          strong Género: 
+          | #{movie.genre}
+        li
+          strong Duración: 
+          | #{movie.runtime ? movie.runtime + ' min' : ''}
+      .card__actions
+        block
+
+//- Formulario "Añadir a Favoritos": solo manda el id y el origen (OMDB o MongoDB),
+//- no los datos de la película (ver "Sobre el modelo de datos" en el README).
+//- public/js/favorites.js lo envía con fetch para no salir de la página.
+//- Si ya es favorita (movie.isFavorite, lo pone favoriteService.markFavorites)
+//- el botón sale desactivado, igual que tras añadirla con fetch.
+mixin addFavorite(movie)
+  form.js-add-favorite(method="POST" action="/api/favorites")
+    input(type="hidden" name="movieId" value=movie.id)
+    input(type="hidden" name="source" value=movie.source)
+    if movie.isFavorite
+      button.btn.btn--primary(type="submit" disabled) ★ En Mis películas
+    else
+      button.btn.btn--primary(type="submit") ★ Añadir a Favoritos
+    p.card__msg(role="status")
+
+//- Campos de la película (crear y editar usan el mismo formulario)
+mixin movieFields(movie)
+  - movie = movie || {}
+  label(for="title") Título completo
+  input#title(type="text" name="title" value=movie.title required minlength="1")
+  label(for="poster") Imagen representativa (URL)
+  input#poster(type="url" name="poster" value=movie.poster required)
+  label(for="year") Año
+  //- Mismo máximo que el modelo (models/movie.model.js): año actual + 5
+  input#year(type="number" name="year" value=movie.year required min="1888" max=new Date().getFullYear() + 5)
+  label(for="director") Director
+  input#director(type="text" name="director" value=movie.director required)
+  label(for="genre") Género
+  input#genre(type="text" name="genre" value=movie.genre required)
+  label(for="runtime") Duración (minutos)
+  input#runtime(type="number" name="runtime" value=movie.runtime required min="1")
+  label(for="synopsis") Sinopsis
+  textarea#synopsis(name="synopsis" rows="4" required)= movie.synopsis
+  //- Llega al backend como texto: allí hay que partirlo por comas para guardar un array
+  label(for="actors") Actores principales (separados por comas)
+  input#actors(type="text" name="actors" value=(movie.actors || []).join(', ') required placeholder="Keanu Reeves, Carrie-Anne Moss")
+  label(for="rating") Valoración (0-10)
+  input#rating(type="number" name="rating" value=movie.rating required min="0" max="10" step="0.1")
+
+//- Campos del usuario en la gestión de usuarios (admin): crear y editar.
+//- La contraseña solo se pide al crear (editar no la cambia).
+mixin userFields(u, withPassword)
+  - u = u || {}
+  label(for="name") Nombre
+  input#name(type="text" name="name" value=u.name required maxlength="100")
+  label(for="email") Email
+  input#email(type="email" name="email" value=u.email required maxlength="255")
+  if withPassword
+    label(for="password") Contraseña
+    input#password(type="password" name="password" required minlength="6")
+  label(for="role") Rol
+  select#role(name="role" required)
+    option(value="user" selected=(u.role !== 'admin')) Usuario
+    option(value="admin" selected=(u.role === 'admin')) Administrador

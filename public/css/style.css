@@ -1,0 +1,488 @@
+/* =========================================================
+   Film App - Estilos (mobile-first)
+   Primero se escribe el móvil y al final, en @media,
+   se añaden los cambios para pantallas grandes.
+   ========================================================= */
+
+/* ---------- 1. Variables: cambiando aquí cambia toda la app ---------- */
+:root {
+    --bg: #0f0f14;            /* fondo "sala de cine" */
+    --surface: #1a1a23;       /* tarjetas y paneles */
+    --surface-2: #252532;     /* inputs, hover */
+    --text: #f2f2f5;
+    --muted: #9a9aab;
+    --primary: #f5b301;       /* dorado tipo palomitas */
+    --primary-text: #1a1300;
+    --danger: #e5484d;
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --gap: 1rem;
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    line-height: 1.2;
+    margin: 0 0 var(--gap);
+}
+
+a {
+    color: var(--primary);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.container {
+    padding: var(--gap);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.alert {
+    background: rgba(229, 72, 77, 0.15);
+    border: 1px solid var(--danger);
+    color: #ffb3b5;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+}
+
+/* ---------- 3. Botones ---------- */
+.btn {
+    display: inline-block;
+    padding: 0.7rem 1.1rem;
+    border: none;
+    border-radius: var(--radius);
+    font: inherit;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.btn--primary { background: var(--primary); color: var(--primary-text); }
+.btn--danger  { background: var(--danger); color: #fff; }
+.btn--ghost   { background: transparent; color: var(--text); border: 1px solid var(--surface-2); }
+.btn--google  { background: #fff; color: #222; }
+.btn--block   { display: block; width: 100%; }
+
+.icon-btn {
+    background: var(--surface);
+    color: var(--text);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* ---------- 4. Formularios ---------- */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form label {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--surface-2);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.form .btn {
+    margin-top: 0.5rem;
+}
+
+.panel {
+    background: var(--surface);
+    padding: var(--gap);
+    border-radius: var(--radius);
+    margin: var(--gap) 0;
+}
+
+/* ---------- 5. Login / registro ---------- */
+.auth {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: var(--gap);
+    background: radial-gradient(circle at top, #2a2135, var(--bg) 60%);
+}
+
+.auth__box {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.auth__logo {
+    text-align: center;
+    color: var(--primary);
+}
+
+.auth__subtitle,
+.auth__footer {
+    text-align: center;
+    color: var(--muted);
+}
+
+.divider {
+    text-align: center;
+    color: var(--muted);
+}
+
+/* ---------- 6. Menú hamburguesa con efecto persiana ---------- */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem var(--gap);
+    background: var(--surface);
+}
+
+.topbar__logo {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    margin: 4px 0;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Las 3 rayas se convierten en una X al abrir */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* La "persiana": altura 0 cerrada, crece al añadir .open */
+.menu {
+    position: sticky;
+    top: 60px;
+    z-index: 9;
+    max-height: 0;
+    overflow: hidden;
+    background: var(--surface);
+    transition: max-height 0.4s ease;
+}
+
+.menu.open {
+    max-height: 400px;
+    box-shadow: var(--shadow);
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu a,
+.menu__logout {
+    display: block;
+    width: 100%;
+    padding: 0.9rem var(--gap);
+    color: var(--text);
+    text-decoration: none;
+    text-align: left;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--surface-2);
+    font: inherit;
+    cursor: pointer;
+}
+
+.menu a:hover,
+.menu__logout:hover {
+    background: var(--surface-2);
+    color: var(--primary);
+}
+
+/* ---------- 7. Dashboard ---------- */
+.dashboard {
+    min-height: 100vh;
+    padding: var(--gap);
+}
+
+.dashboard__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard__grid {
+    display: grid;
+    gap: var(--gap);
+    margin-top: 2rem;
+}
+
+.dashboard__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2.5rem 1rem;
+    background: var(--surface);
+    border-radius: var(--radius);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.dashboard__btn:hover {
+    transform: scale(1.03);
+    color: var(--primary);
+}
+
+.dashboard__icon {
+    font-size: 3rem;
+}
+
+/* ---------- 8. Buscador ---------- */
+.search {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: var(--gap);
+}
+
+/* ---------- 9. Tarjetas de película ---------- */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;   /* 1 columna en móvil */
+    gap: var(--gap);
+}
+
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.card__img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+}
+
+.card__body {
+    padding: var(--gap);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card__info {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--gap);
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.card__info strong {
+    color: var(--text);
+}
+
+.card__actions {
+    margin-top: auto;   /* empuja los botones al fondo de la tarjeta */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Mensaje tras añadir/quitar favoritos (lo rellena public/js/favorites.js) */
+.card__msg {
+    width: 100%;
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: var(--primary);
+}
+
+.card__msg:empty {
+    display: none;
+}
+
+.card__msg--error {
+    color: #ffb3b5;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+}
+
+/* ---------- 10. Detalle de película ---------- */
+.back {
+    display: inline-block;
+    margin-bottom: var(--gap);
+    text-decoration: none;
+}
+
+.detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.detail__img {
+    border-radius: var(--radius);
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.detail__meta {
+    color: var(--muted);
+}
+
+.rating {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* ---------- 11. Lista de usuarios ---------- */
+.user-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.user-list__item {
+    background: var(--surface);
+    padding: var(--gap);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.user-list__info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-list__actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tag {
+    align-self: flex-start;
+    margin-top: 0.25rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    font-size: 0.8rem;
+}
+
+/* =========================================================
+   12. Pantallas grandes (tablet y escritorio)
+   ========================================================= */
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dashboard__grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 700px;
+        margin: 4rem auto 0;
+    }
+
+    .detail {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .detail__img {
+        margin: 0;
+    }
+
+    .user-list__item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

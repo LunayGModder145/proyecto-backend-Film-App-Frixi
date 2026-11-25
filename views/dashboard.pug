@@ -1,0 +1,17 @@
+extends layout
+
+//- El dashboard NO lleva menú, solo un botón para salir (ver README)
+block content
+  main.dashboard
+    header.dashboard__top
+      h1 Hola#{user && user.name ? ', ' + user.name : ''} 👋
+      form(method="POST" action="/api/logout")
+        button.icon-btn(type="submit" title="Salir" aria-label="Salir") ⏻
+
+    .dashboard__grid
+      a.dashboard__btn(href="/search")
+        span.dashboard__icon 🔍
+        span Buscar películas
+      a.dashboard__btn(href="/movies")
+        span.dashboard__icon ★
+        span Mis películas

@@ -1,0 +1,24 @@
+extends layout
+include mixins
+
+block content
+  include menu
+  main.container
+    h1 Buscar películas
+
+    form.search(method="GET" action="/search")
+      input(type="search" name="title" value=query placeholder="Escribe un título..." required aria-label="Título de la película")
+      button.btn.btn--primary(type="submit") 🔍
+
+    if error
+      p.empty= error
+    else if query
+      if movies && movies.length
+        p.muted #{movies.length} resultado(s) para "#{query}"
+        .grid
+          each movie in movies
+            +movieCard(movie)
+              a.btn.btn--ghost(href="/search/" + encodeURIComponent(movie.title)) Ver detalle
+              +addFavorite(movie)
+      else
+        p.empty No hay resultados para "#{query}"

@@ -1,0 +1,33 @@
+extends layout
+include mixins
+
+block content
+  include menu
+  main.container
+    h1 Gestionar películas
+
+    button.btn.btn--primary#toggleCreate(type="button" aria-expanded="false" aria-controls="createForm") + Crear nueva
+
+    //- Oculto hasta pulsar "Crear nueva" (lo controla menu.js).
+    //- public/js/adminMovies.js lo envía con fetch a POST /api/movie y, si va bien, recarga /movies.
+    form.form.panel.js-movie-form#createForm(method="POST" action="/api/movie" data-method="POST" data-redirect="/movies" hidden)
+      h2 Nueva película
+      //- Errores de validación que devuelve el backend (400)
+      .alert.js-form-errors(role="alert" hidden)
+      +movieFields()
+      button.btn.btn--primary(type="submit") Guardar
+
+    if error
+      p.alert= error
+    else if movies && movies.length
+      .grid.js-admin-grid
+        each movie in movies
+          +movieCard(movie)
+            a.btn.btn--ghost(href=`/movies/${movie.id}/edit`) Editar
+            //- DELETE no se puede enviar con un form HTML: lo hace public/js/adminMovies.js con fetch
+            button.btn.btn--danger.js-delete-movie(type="button" data-id=movie.id data-title=movie.title) Eliminar
+            p.card__msg(role="status")
+      //- Se muestra cuando se elimina la última película (sin recargar la página)
+      p.empty.js-admin-empty(hidden) No hay películas en la base de datos.
+    else
+      p.empty No hay películas en la base de datos.

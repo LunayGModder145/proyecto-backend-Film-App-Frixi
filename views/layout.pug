@@ -1,0 +1,18 @@
+//- Plantilla base: todas las vistas hacen "extends layout"
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title || 'Film App'
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap")
+    link(rel="stylesheet" href="/css/style.css")
+  body
+    //- Cada vista rellena este bloque con su contenido
+    block content
+    script(src="/js/menu.js")
+    script(src="/js/favorites.js")
+    script(src="/js/adminMovies.js")
+    script(src="/js/profile.js")
+    script(src="/js/adminUsers.js")

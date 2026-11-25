@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  main.auth
+    .auth__box
+      h1.auth__logo 🎬 Film App
+      h2 Iniciar sesión
+
+      if error
+        p.alert= error
+
+      form.form(method="POST" action="/api/login")
+        label(for="email") Email
+        input#email(type="email" name="email" required placeholder="tu@email.com")
+        label(for="password") Contraseña
+        input#password(type="password" name="password" required minlength="6")
+        button.btn.btn--primary.btn--block(type="submit") Entrar
+
+      p.divider o
+
+      a.btn.btn--google.btn--block(href="/api/auth/google") G  Entrar con Google
+
+      p.auth__footer
+        | ¿No tienes cuenta? 
+        a(href="/signup") Regístrate

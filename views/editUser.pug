@@ -1,0 +1,23 @@
+extends layout
+include mixins
+
+block content
+  include menu
+  main.container
+    a.back(href="/users") ← Volver a Usuarios
+
+    if error
+      p.alert= error
+    else if editUser
+      //- Mismo formulario que "Nuevo usuario" (sin contraseña), relleno con los datos de la BD.
+      //- public/js/adminUsers.js lo envía con fetch a PUT /api/user/:id y, si va bien, vuelve a /users.
+      form.form.panel.js-user-form(method="POST" action=`/api/user/${editUser.id}` data-method="PUT" data-redirect="/users")
+        h1 Editar usuario
+        //- Errores de validación que devuelve el backend (400)
+        .alert.js-form-errors(role="alert" hidden)
+        +userFields(editUser, false)
+        if user && editUser.id === user.id
+          p.muted Este es tu usuario: no puedes quitarte el rol de administrador.
+        button.btn.btn--primary(type="submit") Guardar cambios
+    else
+      p.empty El usuario no existe o ya se ha eliminado.

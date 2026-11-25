@@ -1,0 +1,22 @@
+//- Menú hamburguesa con efecto persiana. Se incluye en todas las vistas
+//- privadas excepto el dashboard. Las opciones cambian según el rol.
+header.topbar
+  a.topbar__logo(href=(user && user.role === 'admin') ? '/movies' : '/dashboard') 🎬 Film App
+  button.hamburger#menuToggle(type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainMenu")
+    span
+    span
+    span
+nav.menu#mainMenu
+  ul
+    if user && user.role === 'admin'
+      li: a(href="/movies") Gestionar películas
+      li: a(href="/users") Usuarios
+      li: a(href="/profile") Mi perfil
+    else
+      li: a(href="/dashboard") Panel de control
+      li: a(href="/search") Buscar películas
+      li: a(href="/movies") Mis películas
+      li: a(href="/profile") Mi perfil
+    li
+      form(method="POST" action="/api/logout")
+        button.menu__logout(type="submit") Salir
