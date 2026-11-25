@@ -58,15 +58,22 @@ app.use('/api/auth', authRoutes);
 app.use('/api/favorites', isAuthenticated, checkRole(['user']), favoritesRoutes);
 app.use('/api', isAuthenticated, movieRoutes, userRoutes);
 
-// Solo arrancamos el servidor si MongoDB conecta
-connectDB()
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// Se arranca solo si se ejecuta este archivo (npm start / npm run dev).
+// Si lo importa otro archivo (los tests e2e), solo se exporta la app:
+// los tests conectan sus propias bases de datos en memoria y no abren ningún puerto.
+if (require.main === module) {
+    // Solo arrancamos el servidor si MongoDB conecta
+    connectDB()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`Servidor corriendo en http://localhost:${PORT}`);
+            });
+        })
+        .catch(() => {
+            console.error('No se pudo conectar a MongoDB. El servidor no se ha iniciado.');
+            process.exit(1);
         });
-    })
-    .catch(() => {
-        console.error('No se pudo conectar a MongoDB. El servidor no se ha iniciado.');
-        process.exit(1);
-    });
+}
+
+module.exports = app;
 

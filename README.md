@@ -214,9 +214,25 @@ La app queda en <http://localhost:3000>. El servidor solo arranca si consigue co
 ### 5. Tests
 
 ```bash
-npm test             # lanza todos los tests
+npm test             # lanza todos los tests (unitarios + e2e)
+npm run test:e2e     # solo los e2e
 npm run test:watch   # modo watch
 ```
+
+Hay dos tipos de tests en [`test/`](test/):
+
+- **Unitarios** (`test/*.test.js`): cada pieza por separado (controladores, middlewares, servicios, modelos), con la base de datos simulada.
+- **E2E** (`test/e2e/`): recorren los flujos principales con la app entera y peticiones HTTP reales, como el navegador (con la cookie de sesión):
+  - `usuario.e2e.test.js`: registro → buscar → detalle → favoritos → quitar → logout, login y perfil.
+  - `admin.e2e.test.js`: crear, editar y borrar películas (y sus favoritos), y gestión de usuarios.
+  - `acceso.e2e.test.js`: control de acceso sin sesión, por rol y con tokens no válidos.
+
+Los e2e **no tocan Supabase ni el Mongo real** y no necesitan `.env`:
+- PostgreSQL se sustituye por [pg-mem](https://github.com/oguimbal/pg-mem), que carga el esquema real de `docs/schema.sql`.
+- MongoDB se sustituye por [mongodb-memory-server](https://github.com/typegoose/mongodb-memory-server).
+- OMDB se simula con un catálogo fijo.
+
+La primera vez que se lanzan, mongodb-memory-server descarga el binario de `mongod` (unos 100 MB) y tarda un poco más.
 
 ---
 

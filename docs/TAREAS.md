@@ -59,5 +59,5 @@
 ### 8. Calidad y entrega
 ~~Documentación con JSDoc en las funciones importantes~~
 ~~Completar la documentación de Swagger~~
-Tests e2e de los flujos principales
+~~Tests e2e de los flujos principales~~
 ~~README final: instalación, variables de entorno y cómo arrancar y lanzar los tests~~

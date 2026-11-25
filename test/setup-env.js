@@ -7,3 +7,6 @@
  * Tiene que estar antes de que se cargue config/session.js, que lee la variable una sola vez.
  */
 process.env.JWT_SECRET = "test_secret_solo_para_jest";
+
+// dotenv (app.js y config/*) avisa por consola cada vez que carga el .env: en los tests es solo ruido
+process.env.DOTENV_CONFIG_QUIET = "true";
